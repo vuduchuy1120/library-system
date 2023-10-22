@@ -20,6 +20,7 @@ namespace LibrarySystem.Models
         public decimal? UnitPrice { get; set; }
         public short? UnitsInStock { get; set; }
         public DateTime? Year { get; set; }
+        public String Image { get; set; }
 
         public virtual Author Author { get; set; }
         public virtual Category Category { get; set; }
