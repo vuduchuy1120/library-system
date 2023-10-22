@@ -10,7 +10,6 @@
 4. **Luôn luôn sử dụng một câu thông báo hợp lý:** Khi bạn đẩy mã lên nhánh `develop`, hãy thêm một câu thông báo rõ ràng và mô tả về những thay đổi bạn đã thực hiện. Điều này giúp cho mọi người hiểu được mục tiêu của thay đổi.
 
 ## Cách đẩy code lên git
-
 1. ** Vào issue để check task của mình được giao
 2. ** Cập nhật code từ nhánh develop về nhánh của mình bằng cách (git pull origin develop)
 3. ** Tạo nhánh mới từ nhánh develop với tên là ["label của issue"] -["tên của issue"] (ví dụ: feature-login) bằng cách ( git chekout -b feature-login)
@@ -27,8 +26,14 @@
 14. ** Xoá nhánh trên remote bằng cách (git push origin --delete feature-login)
 15. ** Làm tương tự với các issue khác
 
+
+## Cách thêm data SQL
+1. ** Xuất các dữ liệu mình thêm trong database ra viết vào file text là data.txt
+
+
 ## Lưu Ý
 - **Hãy thường xuyên cập nhật và đồng bộ hóa với nhánh `develop` để theo kịp các thay đổi mới.**
+- **Hãy đảm bảo rằng bạn phải viết thêm database vào file data.txt.**
 - **Hãy đảm bảo rằng bạn đã kiểm tra mã của mình trước khi đẩy lên nhánh `develop`.**
 - **Hãy đảm bảo rằng bạn đã thêm một câu thông báo hợp lý khi đẩy mã lên nhánh `develop`.**
 - **Hãy đảm bảo rằng bạn đã xóa nhánh của mình trên remote sau khi được phê duyệt.**

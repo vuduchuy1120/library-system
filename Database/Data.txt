@@ -1,0 +1,5 @@
+﻿-- feature-create-models
+
+INSERT [dbo].[Category] ([ID], [CategoryName], [Description]) VALUES (1, N'Math', N'This is math book')
+
+--feature-login--
