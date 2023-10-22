@@ -1,0 +1,49 @@
+﻿@page
+@model LibrarySystem.Pages.BorrowDetails.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>BorrowDetail</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BorrowDetail.BorrowDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BorrowDetail.BorrowDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BorrowDetail.EndDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BorrowDetail.EndDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BorrowDetail.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BorrowDetail.Status)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BorrowDetail.Book)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BorrowDetail.Book.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BorrowDetail.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BorrowDetail.User.UserId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.BorrowDetail?.BorrowId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
