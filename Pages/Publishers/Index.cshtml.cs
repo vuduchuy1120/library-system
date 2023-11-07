@@ -25,7 +25,7 @@ namespace Library_System.Pages.Publishers
         {
             if (_context.Publishers != null)
             {
-                Publisher = await _context.Publishers.ToListAsync();
+                Publisher = await _context.Publishers.OrderBy(a => a.DeleteAt).ToListAsync();
             }
         }
     }

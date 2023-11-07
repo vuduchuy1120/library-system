@@ -47,6 +47,9 @@ namespace Library_System.Pages
         {
             books = _context.Books
                 .Include(b => b.Author)
+                .Include(p=>p.Publisher)
+                .Include(c=>c.Category)     
+                .Where(b=>b.Author.DeleteAt==null && b.Publisher.DeleteAt == null && b.Category.DeleteAt == null && b.DeleteAt == null )
                 .ToList();
             if (categoryId != 0)
             {
@@ -79,7 +82,9 @@ namespace Library_System.Pages
                 Value = "0"
             });
 
-            categoryList.AddRange(_context.Categories.Select(x =>
+            categoryList.AddRange(_context.Categories
+                .Where(c=>c.DeleteAt==null)
+                .Select(x =>
               new SelectListItem
               {
                   Text = x.CategoryName,
