@@ -1,0 +1,40 @@
+﻿@page
+@model Library_System.Pages.RegisterModel
+<form method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="container py-5 h-100">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+				<div class="card shadow-2-strong" style="border-radius: 1rem;">
+					<div class="card-body p-5 ">
+						<h3 class="mb-5 text-center">Sign in</h3>
+						<div class="form-outline mb-4">
+							<input placeholder="username"
+								   asp-for="@Model.Account.UserName"
+								   class="form-control form-control-lg" />
+							<span asp-validation-for="@Model.Account.UserName" class="text-danger"></span>
+						</div>
+						<div class="form-outline mb-4">
+							<input placeholder="Full Name" asp-for="@Model.Account.Email" class="form-control form-control-lg" />
+							<span asp-validation-for="@Model.Account.Email" class="text-danger"></span>
+						</div>
+
+						<div class="form-outline mb-4">
+							<input type="number" placeholder="Phone" asp-for="@Model.Account.Phone" class="form-control form-control-lg" />
+							<span asp-validation-for="@Model.Account.Phone" class="text-danger"></span>
+						</div>
+						<div class="form-outline mb-4">
+							<input type="password" placeholder="password" asp-for="@Model.Account.Password" class="form-control form-control-lg" />
+							<span asp-validation-for="@Model.Account.Password" class="text-danger"></span>
+						</div>
+						<div class="form-outline mb-4">
+							<input type="password" placeholder="enter again password" asp-for="@Model.repassword" class="form-control form-control-lg" />
+							<span asp-validation-for="@Model.repassword" class="text-danger"></span>
+						</div>						
+					</div>
+					<button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
