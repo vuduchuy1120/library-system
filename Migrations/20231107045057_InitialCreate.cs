@@ -85,7 +85,10 @@ namespace Library_System.Migrations
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UnitInStock = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrintLength = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

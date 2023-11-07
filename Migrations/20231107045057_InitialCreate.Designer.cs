@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library_System.Migrations
 {
     [DbContext(typeof(LibrarySystemContext))]
-    [Migration("20231101172526_InitialCreate")]
+    [Migration("20231107045057_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,10 @@ namespace Library_System.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -109,6 +113,13 @@ namespace Library_System.Migrations
                     b.Property<string>("IsbCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PrintLength")
+                        .HasColumnType("int");
 
                     b.Property<int>("PublisherId")
                         .HasColumnType("int");

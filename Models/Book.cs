@@ -19,6 +19,9 @@ namespace Library_System.Models
         public int UnitInStock { get; set; }
         public DateTime Year { get; set; }
         public string Image { get; set; }
+        public string Description { get; set; }
+        public String Language { get; set; }
+        public int PrintLength { get; set; }
 
         [ForeignKey("AuthorId")]
         [ValidateNever]

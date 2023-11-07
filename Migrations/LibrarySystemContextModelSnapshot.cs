@@ -100,6 +100,10 @@ namespace Library_System.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -107,6 +111,13 @@ namespace Library_System.Migrations
                     b.Property<string>("IsbCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PrintLength")
+                        .HasColumnType("int");
 
                     b.Property<int>("PublisherId")
                         .HasColumnType("int");
