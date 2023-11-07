@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library_System;
 using Library_System.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library_System.Pages.Authors
 {
+    [Authorize(Policy = "Admin")]
+
     public class EditModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;

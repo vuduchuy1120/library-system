@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Library_System;
 using Library_System.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library_System.Pages.Authors
 {
+    [Authorize(Policy = "Admin")]
+
     public class DeleteModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;
