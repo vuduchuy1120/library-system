@@ -95,13 +95,13 @@
                 @Html.DisplayFor(modelItem => item.DeleteAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author.Id)
+                @Html.DisplayFor(modelItem => item.Author.AuthorName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.Id)
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Publisher.Id)
+                @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
