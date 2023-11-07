@@ -25,8 +25,7 @@ namespace Library_System.Pages.Accounts
         {
             if (_context.Accounts != null)
             {
-                Account = await _context.Accounts
-                    .Where(p => p.DeleteAt == null)
+                Account = await _context.Accounts.OrderBy(a=> a.DeleteAt)
                     .ToListAsync();
             }
         }
