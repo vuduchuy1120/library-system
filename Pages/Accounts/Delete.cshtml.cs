@@ -53,7 +53,8 @@ namespace Library_System.Pages.Accounts
             if (account != null)
             {
                 Account = account;
-                _context.Accounts.Remove(Account);
+                Account.DeleteAt = DateTime.Now;
+                _context.Accounts.Update(Account);
                 await _context.SaveChangesAsync();
             }
 

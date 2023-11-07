@@ -53,7 +53,8 @@ namespace Library_System.Pages.BorrowDetails
             if (borrowdetail != null)
             {
                 BorrowDetail = borrowdetail;
-                _context.BorrowDetails.Remove(BorrowDetail);
+                BorrowDetail.DeleteAt = DateTime.Now;
+                _context.BorrowDetails.Update(BorrowDetail);
                 await _context.SaveChangesAsync();
             }
 

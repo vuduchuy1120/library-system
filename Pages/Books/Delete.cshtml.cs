@@ -53,7 +53,8 @@ namespace Library_System.Pages.Books
             if (book != null)
             {
                 Book = book;
-                _context.Books.Remove(Book);
+                Book.DeleteAt = DateTime.Now;
+                _context.Books.Update(Book);
                 await _context.SaveChangesAsync();
             }
 

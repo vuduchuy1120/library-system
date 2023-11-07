@@ -31,15 +31,85 @@ namespace Library_System.Pages.Accounts
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Accounts == null || Account == null)
+            try
             {
+                if (!ModelState.IsValid || _context.Accounts == null || Account == null)
+                {
+                    return Page();
+                }
+
+                _context.Accounts.Add(Account);
+                await _context.SaveChangesAsync();
+            }catch(Exception e)
+            {
+                if (!isUniqueEmail(Account.Email))
+                {
+                    ModelState.AddModelError("Account.Email", "Email already exists");
+
+                }
+                if(!isUniqueUsername(Account.UserName))
+                {
+                    ModelState.AddModelError("Account.UserName", "Username already exists");
+                }
+                if(!isUniquePhone(Account.Phone))
+                {
+                    ModelState.AddModelError("Account.Phone", "Phone already exists");
+                }
                 return Page();
             }
-
-            _context.Accounts.Add(Account);
-            await _context.SaveChangesAsync();
+         
 
             return RedirectToPage("./Index");
         }
+
+        // check isUnique for Email
+        public bool isUniqueEmail(string email)
+        {
+            if (_context.Accounts == null)
+            {
+                return true;
+            }
+            foreach (var account in _context.Accounts)
+            {
+                if (account.Email == email)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // check isUnique for Username
+        public bool isUniqueUsername(string username)
+        {
+            if (_context.Accounts == null)
+            {
+                return true;
+            }
+            foreach (var account in _context.Accounts)
+            {
+                if (account.UserName.Equals(username))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // check isUnique for Phone
+        public bool isUniquePhone(string phone)
+        {
+            if (_context.Accounts == null)
+            {
+                return true;
+            }
+            foreach (var account in _context.Accounts)
+            {
+                if (account.Phone == phone)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 }

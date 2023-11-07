@@ -36,10 +36,19 @@ namespace Library_System.Pages.Categories
                 return Page();
             }
 
-            _context.Categories.Add(Category);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Categories.Add(Category);
+                await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+                return RedirectToPage("./Index");
+            }
+            catch (Exception)
+            {
+
+                ModelState.AddModelError("Category.CategoryName", "This Category Name existed!!!");
+                return Page();
+            }
         }
     }
 }

@@ -53,7 +53,8 @@ namespace Library_System.Pages.Categories
             if (category != null)
             {
                 Category = category;
-                _context.Categories.Remove(Category);
+                Category.DeleteAt = DateTime.Now;
+                _context.Categories.Update(Category);
                 await _context.SaveChangesAsync();
             }
 

@@ -53,7 +53,8 @@ namespace Library_System.Pages.Authors
             if (author != null)
             {
                 Author = author;
-                _context.Authors.Remove(Author);
+                Author.DeleteAt = DateTime.Now;
+                _context.Authors.Update(Author);
                 await _context.SaveChangesAsync();
             }
 

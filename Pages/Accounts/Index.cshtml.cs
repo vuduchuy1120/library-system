@@ -25,7 +25,9 @@ namespace Library_System.Pages.Accounts
         {
             if (_context.Accounts != null)
             {
-                Account = await _context.Accounts.ToListAsync();
+                Account = await _context.Accounts
+                    .Where(p => p.DeleteAt == null)
+                    .ToListAsync();
             }
         }
     }

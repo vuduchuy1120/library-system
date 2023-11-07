@@ -38,11 +38,20 @@ namespace Library_System.Pages.Books
             {
                 return Page();
             }
+            try
+            {
+                _context.Books.Add(Book);
+                await _context.SaveChangesAsync();
 
-            _context.Books.Add(Book);
-            await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("Book.ISBN", "ISBN already exists");   
+                return Page();
+            }
 
-            return RedirectToPage("./Index");
+            
         }
     }
 }
