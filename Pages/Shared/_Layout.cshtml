@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,6 +9,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Library_System.styles.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
@@ -44,12 +47,15 @@
                     </ul>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item flex-grow-5">
+                            @{
+                                var total = Context.Session.GetString("total");
+                            }
                             
                             <a class="nav-link text-dark" asp-area="" asp-page="/Cart">
                                 <button class="btn btn-outline-dark" type="submit">
                                     <i class="bi-cart-fill me-1"></i>
                                     Cart
-                                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="total">@total</span>
                                 </button>
                             </a>
                         </li>
@@ -81,4 +87,19 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script>
+    $(document).ready(function () {
+        // Gửi yêu cầu AJAX để lấy giá trị từ HttpContext.Session
+        $.ajax({
+            type: "GET",
+            url: "/YourController/GetCartTotal", // Thay thế YourController/GetCartTotal bằng đúng URL của bạn
+            success: function (total) {
+                $('#total').text(total);
+            },
+            error: function () {
+                // Xử lý lỗi nếu có
+            }
+        });
+    });
+</script>
 </html>
