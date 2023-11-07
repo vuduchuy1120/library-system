@@ -9,7 +9,9 @@ namespace Library_System.Models
         [Key]
         public int Id { get; set; }
         public string CategoryName { get; set; }
-        public string Descriptions { get; set; }
+        public string? Descriptions { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? DeleteAt { get; set; }
         [ValidateNever]
         public ICollection<Book> Books { get; set; }
     }

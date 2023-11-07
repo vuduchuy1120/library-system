@@ -8,8 +8,10 @@ namespace Library_System.Models
         [Key]
         public int Id { get; set; }
         public string AuthorName { get; set; }
-        public string Bio { get; set; }
+        public string? Bio { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? DeleteAt { get; set; }
         [ValidateNever]
-        public ICollection<Book> Books { get; set; }
+        public ICollection<Book>? Books { get; set; }
     }
 }

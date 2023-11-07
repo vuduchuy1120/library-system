@@ -8,7 +8,9 @@ namespace Library_System.Models
         [Key]
         public int Id { get; set; }
         public string PublisherName { get; set; }
-        public string Address { get; set; }
+        public string? Address { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? DeleteAt { get; set; }
         [ValidateNever]
         public ICollection<Book> Books { get; set; }
     }

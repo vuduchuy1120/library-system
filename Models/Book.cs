@@ -11,27 +11,30 @@ namespace Library_System.Models
         public int Id { get; set; }
         public string IsbCode { get; set; }
         public string BookName { get; set; }
-        public int CategoryId { get; set; }
-        public int AuthorId { get; set; }
-        public int PublisherId { get; set; }
-        public string QuantityPerUnit { get; set; }
-        public decimal UnitPrice { get; set; }
-        public int UnitInStock { get; set; }
-        public DateTime Year { get; set; }
-        public string Image { get; set; }
-        public string Description { get; set; }
-        public String Language { get; set; }
-        public int PrintLength { get; set; }
+        public int? CategoryId { get; set; }
+        public int? AuthorId { get; set; }
+        public int? PublisherId { get; set; }
+        public string QuantityPerUnit { get; set; } = "1";
+        public decimal? UnitPrice { get; set; }
+        public int UnitInStock { get; set; } = 1;
+        [DataType(DataType.Date)]
+        public DateTime? Year { get; set; }
+        public string? Image { get; set; }
+        public string? Description { get; set; }
+        public String? Language { get; set; }
+        public int? PrintLength { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? DeleteAt { get; set; }
 
         [ForeignKey("AuthorId")]
         [ValidateNever]
-        public Author Author { get; set; }
+        public Author? Author { get; set; }
         [ForeignKey("CategoryId")]
         [ValidateNever]
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         [ForeignKey("PublisherId")]
         [ValidateNever]
-        public Publisher Publisher { get; set; }
+        public Publisher? Publisher { get; set; }
         [ValidateNever]
         public ICollection<BorrowDetail> BorrowDetails { get; set; }
 

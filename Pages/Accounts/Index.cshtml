@@ -34,6 +34,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Account[0].IsAdmin)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Account[0].DeleteAt)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -60,6 +63,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsAdmin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeleteAt)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.UserId">Edit</a> |

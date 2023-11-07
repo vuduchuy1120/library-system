@@ -24,6 +24,11 @@
                 <span asp-validation-for="Author.Bio" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Author.DeleteAt" class="control-label"></label>
+                <input asp-for="Author.DeleteAt" class="form-control" />
+                <span asp-validation-for="Author.DeleteAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

@@ -44,6 +44,9 @@
                 @Html.DisplayNameFor(model => model.Book[0].PrintLength)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Book[0].DeleteAt)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Book[0].Author)
             </th>
             <th>
@@ -87,6 +90,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PrintLength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeleteAt)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author.Id)

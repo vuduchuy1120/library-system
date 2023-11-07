@@ -23,6 +23,30 @@ namespace Library_System
         .WithMany(a => a.Books)
         .HasForeignKey(b => b.AuthorId)
         .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Book>()
+        .HasIndex(b => b.IsbCode)
+        .IsUnique();
+
+            modelBuilder.Entity<Account>()
+                .HasIndex(a => a.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Account>()
+                .HasIndex(a => a.UserName)
+                .IsUnique();
+
+            modelBuilder.Entity<Account>()
+                .HasIndex(a => a.Phone)
+                .IsUnique();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(Category => Category.CategoryName)
+                .IsUnique();
+
+            modelBuilder.Entity<Publisher>()
+                .HasIndex(Publisher => Publisher.PublisherName)
+                .IsUnique();
         }
     }
 }
