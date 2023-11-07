@@ -28,7 +28,7 @@ namespace Library_System.Pages.Books
                 Book = await _context.Books
                 .Include(b => b.Author)
                 .Include(b => b.Category)
-                .Include(b => b.Publisher).ToListAsync();
+                .Include(b => b.Publisher).OrderBy(a => a.DeleteAt).ToListAsync();
             }
         }
     }

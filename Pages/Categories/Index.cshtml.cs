@@ -25,7 +25,7 @@ namespace Library_System.Pages.Categories
         {
             if (_context.Categories != null)
             {
-                Category = await _context.Categories.ToListAsync();
+                Category = await _context.Categories.OrderBy(a => a.DeleteAt).ToListAsync();
             }
         }
     }
