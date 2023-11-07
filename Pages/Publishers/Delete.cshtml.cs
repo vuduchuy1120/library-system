@@ -53,7 +53,8 @@ namespace Library_System.Pages.Publishers
             if (publisher != null)
             {
                 Publisher = publisher;
-                _context.Publishers.Remove(Publisher);
+                Publisher.DeleteAt = DateTime.Now;
+                _context.Publishers.Update(Publisher);
                 await _context.SaveChangesAsync();
             }
 

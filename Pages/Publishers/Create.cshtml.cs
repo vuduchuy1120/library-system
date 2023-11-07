@@ -36,10 +36,18 @@ namespace Library_System.Pages.Publishers
                 return Page();
             }
 
-            _context.Publishers.Add(Publisher);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Publishers.Add(Publisher);
+                await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+                return RedirectToPage("./Index");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("Publisher.PublisherName", "This Publisher Name is existed!!!");
+                return Page(); 
+            }
         }
     }
 }
