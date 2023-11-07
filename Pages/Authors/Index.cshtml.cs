@@ -28,7 +28,7 @@ namespace Library_System.Pages.Authors
         {
             if (_context.Authors != null)
             {
-                Author = await _context.Authors.ToListAsync();
+                Author = await _context.Authors.OrderBy(a => a.DeleteAt).ToListAsync();
             }
         }
     }
