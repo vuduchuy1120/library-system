@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 
 namespace Library_System.Pages
 {
@@ -25,16 +26,19 @@ namespace Library_System.Pages
         [BindProperty]
         public int option { get; set; } 
         [BindProperty]
-        public string search { get; set; } 
+        public string search { get; set; }
+        [BindProperty]
+        public bool showAlert { get; set; }
+        [BindProperty]
+        public string alertMessage { get; set; }
         
         public List<Book> books = new List<Book>();
-        public void OnGet()
+        public async Task OnGet()
         {
             categoryId = 0;
             option = 1;
             search = "";
             OnPost();
-
 
         }
         public void OnPost()
@@ -42,6 +46,39 @@ namespace Library_System.Pages
             getBooks();
             getCategory();
             
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OnPostAddCart(int id)
+        {
+            Book book = _context.Books.Find(id);
+
+            List<Book> books;
+            if (HttpContext.Session.GetString("books")==null)
+            {
+                books = new List<Book>();
+                books.Add(book);
+                HttpContext.Session.SetString("books", JsonSerializer.Serialize(books));
+            }
+            else
+            {
+                books = JsonSerializer.Deserialize<List<Book>>(HttpContext.Session.GetString("books"));
+                foreach (var item in books)
+                {
+                    if (item.Id == book.Id)
+                    {
+                        showAlert = true;
+                        alertMessage = "This Book already exists in cart";
+                        await OnGet();
+                        return Page();
+                    }
+                }
+                books.Add(book);
+                HttpContext.Session.SetString("books", JsonSerializer.Serialize(books));
+            }
+
+            HttpContext.Session.SetString("total", books.Count.ToString());
+            return RedirectToPage("./Index");
         }
         public void getBooks()
         {
