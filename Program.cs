@@ -26,7 +26,7 @@ namespace Library_System
 
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("Admin", policy => policy.RequireClaim("isAdmin", "true"));
+                options.AddPolicy("Admin", policy => policy.RequireClaim("isAdmin", "True"));
             });
 
             var app = builder.Build();
