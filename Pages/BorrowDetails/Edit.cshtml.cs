@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library_System;
 using Library_System.Models;
+using Library_System.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Library_System.Pages.BorrowDetails
 {
     public class EditModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;
+        private readonly IHubContext<SignalrHub> _hubContext;
 
-        public EditModel(Library_System.LibrarySystemContext context)
+        public EditModel(Library_System.LibrarySystemContext context,IHubContext<SignalrHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -39,6 +43,8 @@ namespace Library_System.Pages.BorrowDetails
             BorrowDetail = borrowdetail;
            ViewData["AccountId"] = new SelectList(_context.Accounts, "UserId", "UserName");
            ViewData["BookId"] = new SelectList(_context.Books, "Id", "BookName");
+            List<string> status = new List<string>() { "Booked", "Borrowed", "OutOfDate", "Returned", "Canceled" };
+            ViewData["Status"] = new SelectList(status);
             return Page();
         }
 
@@ -82,6 +88,13 @@ namespace Library_System.Pages.BorrowDetails
                 }
             }
 
+            _hubContext.Clients.All.SendAsync("LoadEdit"
+                ,BorrowDetail.BorrowId
+                , _context.Accounts.Find(BorrowDetail.AccountId).UserName
+                , _context.Books.Find(BorrowDetail.BookId).BookName
+                , BorrowDetail.BorrowDate.ToString("MM/d/yyyy")
+                , BorrowDetail.ReturnDate.ToString("MM/d/yyyy")
+                , BorrowDetail.Status);
             return RedirectToPage("./Index");
         }
 
