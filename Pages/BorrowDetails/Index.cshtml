@@ -33,17 +33,12 @@
                 @Html.DisplayNameFor(model => model.BorrowDetail[0].Status)
             </th>
             
-            
-            
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].DeleteAt)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.BorrowDetail) {
-        <tr>
+        <tr data-edit="@item.BorrowId">
             <td>
                 @Html.DisplayFor(modelItem => item.BorrowId)
             </td>
@@ -53,39 +48,34 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Book.BookName)
             </td>
-            <td>
+            <td >
                     @Html.DisplayFor(modelItem => item.BorrowDate)
             </td>
-            <td>
+                <td data-returnDate="@item.BorrowId">
                 @Html.DisplayFor(modelItem => item.ReturnDate)
             </td>
             <td >
-                    <form method="post" asp-page-handler="ChageStatus">
-                        <input type="hidden" value="@item.BorrowId" name="id" />
-                        <select data-status="@item.BorrowId" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status" ></select>
-                    </form>
+                <form method="post" asp-page-handler="ChageStatus">
+                    <input type="hidden" value="@item.BorrowId" name="id" />
+                    <select data-status="@item.BorrowId" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status"></select>
+                </form>
             </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeleteAt)
-                </td>
             <td>
-                    <input type="hidden" value="@item.Status" id="backupStatus">
-                    <a asp-page="./Edit" asp-route-id="@item.BorrowId" >Edit</a> |
-                    <form method="post" asp-page-handler="Extention">
-                    <input type="hidden" value="@item.BookId" name="id" />
-                    <button type="submit" class="btn-success">Extention</button>
-                    </form>
-                <a asp-page="./Delete" asp-route-id="@item.BorrowId">Delete</a>
+                <input type="hidden" value="@item.Status" id="backupStatus">
+                <a asp-page="./Edit" asp-route-id="@item.BorrowId" >Edit</a> |
+                <form method="post" asp-page-handler="Extention">
+                <input type="hidden" value="@item.BookId" name="id" />
+                <button type="submit" class="btn-success">Extention</button>
+                </form>
             </td>
         </tr>
 }
     </tbody>
 </table>
-<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script>
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/employeeHub").build();
+    var connection = new signalR.HubConnectionBuilder().withUrl("/signalrHub").build();
 
     connection.start().then(function () {
         console.log('SignalR Started...')
@@ -93,20 +83,36 @@
         return console.error(err.toString());
     });
 
-    connection.on("LoadStatus", function (id,status) {
-        const row = document.querySelector(`tr[data-status="${id}"]`);
+    connection.on("LoadStatus", function (id, status) {
+        const row = document.querySelector(`select[data-status="${id}"]`);
         if (row) {
-            row.textContent = status;
+            for (let option of row.options) {
+                if (option.value == status) {
+                    option.selected = true;
+                }
+                else {
+                    option.selected = false;
+                }
+            }
+
         }
-    })
+    });
 
-function changeStatus(element) {
-    if (confirm("Are you sure change this status?")) {
-        element.parentElement.submit();
-    } else {
-        element.value = document.getElementById("backupStatus").value;
+    connection.on("LoadEdit", function (id, returnDate) {
+        const row = document.querySelector(`tr[data-edit="${id}"]`);
+        if (row) {
+            row.innerHTML = returnDate;
+        }
+    });
+   
+
+</script>
+<script>
+    function changeStatus(element) {
+        if (confirm("Are you sure change this status?")) {
+            element.parentElement.submit();
+        } else {
+            element.value = document.getElementById("backupStatus").value;
+        }
     }
-    }
-
-
 </script>

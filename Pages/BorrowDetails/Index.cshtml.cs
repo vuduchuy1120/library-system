@@ -44,10 +44,32 @@ namespace Library_System.Pages.BorrowDetails
                 }
 
             }
-            List<string> status = new List<string>() { "Booked", "Borrowed", "OutOfDate", "Returned" };
+            List<string> status = new List<string>() {"Booked", "Borrowed", "OutOfDate", "Returned", "Canceled"};
             ViewData["Status"] = new SelectList(status);
 
         }
 
+        public IActionResult OnPostExtention(int id)
+        {
+            BorrowDetail borrowDetail = _context.BorrowDetails.Find(id);
+            // Add 7 days to return date
+            borrowDetail.ReturnDate = borrowDetail.ReturnDate.AddDays(7);
+            if(borrowDetail.ReturnDate > DateTime.Now)
+            {
+                borrowDetail.Status = "Borrowed";
+            }
+            _context.SaveChanges();
+            _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("MM/d/yyyy"));
+            return RedirectToPage("./Index");
+        }
+
+        public IActionResult OnPostChageStatus(int id, string status)
+        {
+            BorrowDetail borrowDetail = _context.BorrowDetails.Find(id);
+            borrowDetail.Status = status;
+            _context.SaveChanges();
+            _hubContext.Clients.All.SendAsync("LoadStatus", borrowDetail.BorrowId, borrowDetail.Status);
+            return RedirectToPage("./Index");
+        }
     }
 }

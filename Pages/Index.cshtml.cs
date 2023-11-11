@@ -52,6 +52,14 @@ namespace Library_System.Pages
         {
             Book book = _context.Books.Find(id);
 
+            if(book.UnitInStock <= 0)
+            {
+                showAlert = true;
+                alertMessage = "This Book is out of stock";
+                await OnGet();
+                return Page();
+            }
+
             List<Book> books;
             if (HttpContext.Session.GetString("books")==null)
             {
