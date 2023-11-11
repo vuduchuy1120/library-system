@@ -1,3 +1,4 @@
+using Library_System.Hubs;
 using Library_System.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace Library_System
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("isAdmin", "True"));
             });
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -47,7 +49,7 @@ namespace Library_System
             app.UseAuthorization();
 
             app.MapRazorPages();
-
+            app.MapHub<SignalrHub>("/signalrHub");
             app.Run();
         }
     }

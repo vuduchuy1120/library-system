@@ -48,27 +48,29 @@
                 @Html.DisplayFor(modelItem => item.BorrowId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Account.UserId)
+                @Html.DisplayFor(modelItem => item.Account.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Book.Id)
+                @Html.DisplayFor(modelItem => item.Book.BookName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BorrowDate)
+                    @Html.DisplayFor(modelItem => item.BorrowDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReturnDate)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
+            <td >
+                    <form method="post" asp-page-handler="ChageStatus">
+                        <input type="hidden" value="@item.BorrowId" name="id" />
+                        <select data-status="@item.BorrowId" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status" ></select>
+                    </form>
             </td>
-
 
                 <td>
                     @Html.DisplayFor(modelItem => item.DeleteAt)
                 </td>
             <td>
-                
+                    <input type="hidden" value="@item.Status" id="backupStatus">
                     <a asp-page="./Edit" asp-route-id="@item.BorrowId" >Edit</a> |
                     <form method="post" asp-page-handler="Extention">
                     <input type="hidden" value="@item.BookId" name="id" />
@@ -80,3 +82,31 @@
 }
     </tbody>
 </table>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script>
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/employeeHub").build();
+
+    connection.start().then(function () {
+        console.log('SignalR Started...')
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    connection.on("LoadStatus", function (id,status) {
+        const row = document.querySelector(`tr[data-status="${id}"]`);
+        if (row) {
+            row.textContent = status;
+        }
+    })
+
+function changeStatus(element) {
+    if (confirm("Are you sure change this status?")) {
+        element.parentElement.submit();
+    } else {
+        element.value = document.getElementById("backupStatus").value;
+    }
+    }
+
+
+</script>

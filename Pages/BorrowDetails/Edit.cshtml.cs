@@ -22,6 +22,7 @@ namespace Library_System.Pages.BorrowDetails
 
         [BindProperty]
         public BorrowDetail BorrowDetail { get; set; } = default!;
+        
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -36,19 +37,32 @@ namespace Library_System.Pages.BorrowDetails
                 return NotFound();
             }
             BorrowDetail = borrowdetail;
-           ViewData["AccountId"] = new SelectList(_context.Accounts, "UserId", "UserId");
-           ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id");
+           ViewData["AccountId"] = new SelectList(_context.Accounts, "UserId", "UserName");
+           ViewData["BookId"] = new SelectList(_context.Books, "Id", "BookName");
             return Page();
         }
 
+        public void loadData()
+        {
+            ViewData["AccountId"] = new SelectList(_context.Accounts, "UserId", "UserName");
+            ViewData["BookId"] = new SelectList(_context.Books, "Id", "BookName");
+        }
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                loadData();
                 return Page();
             }
+            if(BorrowDetail.ReturnDate<BorrowDetail.BorrowDate)
+            {
+                loadData();
+                ModelState.AddModelError("BorrowDetail.ReturnDate", "Return date must be greater than borrow date");
+                return Page();
+            }
+            
 
             _context.Attach(BorrowDetail).State = EntityState.Modified;
 
