@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Library_System;
 using Library_System.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library_System.Pages.BorrowDetails
 {
+    [Authorize(Policy = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;

@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Library_System;
 using Library_System.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Library_System.Hubs;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Library_System.Pages.BorrowDetails
 {
+    [Authorize(Policy = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;
@@ -23,7 +25,7 @@ namespace Library_System.Pages.BorrowDetails
             _hubContext = hubContext;
         }
         [BindProperty]
-        public IList<BorrowDetail> BorrowDetail { get;set; } = default!;
+        public IList<BorrowDetail> BorrowDetail { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -32,33 +34,20 @@ namespace Library_System.Pages.BorrowDetails
                 BorrowDetail = await _context.BorrowDetails
                 .Include(b => b.Account)
                 .Include(b => b.Book).ToListAsync();
+
+                foreach (var item in BorrowDetail.Where(item => item.ReturnDate <= DateTime.Now && item.Status == "Borrowed"))
+                {
+                    item.Status = "OutOfDate";
+                    _context.BorrowDetails.Update(item);
+                    await _context.SaveChangesAsync();
+                    
+                }
+
             }
-            List<string> status = new List<string>() {"Booked", "Borrowed", "OutOfDate", "Returned" };
+            List<string> status = new List<string>() { "Booked", "Borrowed", "OutOfDate", "Returned" };
             ViewData["Status"] = new SelectList(status);
 
         }
 
-        public IActionResult OnPostExtention(int id)
-        {
-            BorrowDetail borrowDetail = _context.BorrowDetails.Find(id);
-            // Add 7 days to return date
-            borrowDetail.ReturnDate = borrowDetail.ReturnDate.AddDays(7);
-            if(borrowDetail.ReturnDate > DateTime.Now)
-            {
-                borrowDetail.Status = "Borrowed";
-            }
-            _context.SaveChanges();
-            
-            return RedirectToPage("./Index");
-        }
-
-        public IActionResult OnPostChageStatus(int id, string status)
-        {
-            BorrowDetail borrowDetail = _context.BorrowDetails.Find(id);
-            borrowDetail.Status = status;
-            _context.SaveChanges();
-            _hubContext.Clients.All.SendAsync("LoadStatus", borrowDetail.BorrowId, borrowDetail.Status);
-            return RedirectToPage("./Index");
-        }
     }
 }

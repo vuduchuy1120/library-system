@@ -25,44 +25,57 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Accounts/Index">Accounts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Authors/Index">Authors</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Books/Index">Books</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Categories/Index">Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/BorrowDetails/Index">BorrowDetails</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Publishers/Index">Publishers</a>
-                        </li>
-                        
-                    </ul>
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item flex-grow-5">
-                            @{
-                                var total = Context.Session.GetString("total");
-                            }
+                        @if (User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Accounts/Index">Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Authors/Index">Authors</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Books/Index">Books</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Categories/Index">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/BorrowDetails/Index">BorrowDetails</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Publishers/Index">Publishers</a>
+                            </li>
                             
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Cart">
-                                <button class="btn btn-outline-dark" type="submit">
-                                    <i class="bi-cart-fill me-1"></i>
-                                    Cart
-                                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="total">@total</span>
-                                </button>
-                            </a>
-                        </li>
-                        <form method="post" asp-page="/Logout">
-                            <button type="submit" class="btn btn-link">Logout</button>
-                        </form>
+                        }                        
                     </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item flex-grow-5">
+                                @{
+                                    var total = Context.Session.GetString("total");
+                                }
+
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Cart">
+                                    <button class="btn btn-outline-dark" type="submit">
+                                        <i class="bi-cart-fill me-1"></i>
+                                        Cart
+                                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="total">@total</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-page="/Logout">
+                                    <button type="submit" class="btn btn-link">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <a class="btn btn-link" asp-page="/Login">Login</a>
+                        <a class="btn btn-link" asp-page="/Register">Register</a>
+                    }
                 </div>
 
 
