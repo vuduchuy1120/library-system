@@ -22,7 +22,7 @@ namespace Library_System.Pages.BorrowDetails
         [BindProperty]
       public BorrowDetail BorrowDetail { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.BorrowDetails == null)
             {
@@ -42,7 +42,7 @@ namespace Library_System.Pages.BorrowDetails
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null || _context.BorrowDetails == null)
             {
@@ -53,8 +53,7 @@ namespace Library_System.Pages.BorrowDetails
             if (borrowdetail != null)
             {
                 BorrowDetail = borrowdetail;
-                BorrowDetail.DeleteAt = DateTime.Now;
-                _context.BorrowDetails.Update(BorrowDetail);
+                _context.BorrowDetails.Remove(BorrowDetail);
                 await _context.SaveChangesAsync();
             }
 

@@ -21,7 +21,7 @@ namespace Library_System.Pages.BorrowDetails
 
       public BorrowDetail BorrowDetail { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null || _context.BorrowDetails == null)
             {

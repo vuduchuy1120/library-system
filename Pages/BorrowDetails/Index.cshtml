@@ -13,6 +13,16 @@
 <table class="table">
     <thead>
         <tr>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowDetail[0].Account)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowDetail[0].Book)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowDate)
             </th>
@@ -22,14 +32,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.BorrowDetail[0].Status)
             </th>
+            
+            
+            
             <th>
                 @Html.DisplayNameFor(model => model.BorrowDetail[0].DeleteAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].Book)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].Account)
             </th>
             <th></th>
         </tr>
@@ -37,6 +44,15 @@
     <tbody>
 @foreach (var item in Model.BorrowDetail) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BorrowId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Account.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book.Id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BorrowDate)
             </td>
@@ -46,18 +62,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeleteAt)
+                </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeleteAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Book.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account.UserId)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.BorrowId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.BorrowId">Details</a> |
+                
+                    <a asp-page="./Edit" asp-route-id="@item.BorrowId" >Edit</a> |
+                    <form method="post" asp-page-handler="Extention">
+                    <input type="hidden" value="@item.BookId" name="id" />
+                    <button type="submit" class="btn-success">Extention</button>
+                    </form>
                 <a asp-page="./Delete" asp-route-id="@item.BorrowId">Delete</a>
             </td>
         </tr>

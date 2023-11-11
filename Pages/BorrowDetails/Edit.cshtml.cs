@@ -23,7 +23,7 @@ namespace Library_System.Pages.BorrowDetails
         [BindProperty]
         public BorrowDetail BorrowDetail { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null || _context.BorrowDetails == null)
             {
@@ -71,7 +71,7 @@ namespace Library_System.Pages.BorrowDetails
             return RedirectToPage("./Index");
         }
 
-        private bool BorrowDetailExists(string id)
+        private bool BorrowDetailExists(int id)
         {
           return (_context.BorrowDetails?.Any(e => e.BorrowId == id)).GetValueOrDefault();
         }

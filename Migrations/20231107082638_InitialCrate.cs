@@ -120,7 +120,7 @@ namespace Library_System.Migrations
                 name: "BorrowDetails",
                 columns: table => new
                 {
-                    BorrowId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BorrowId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false),
                     BorrowDate = table.Column<DateTime>(type: "datetime2", nullable: false),
