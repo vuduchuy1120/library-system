@@ -5,7 +5,7 @@ namespace Library_System.Models
     public class BorrowDetail
     {
         [Key]
-        public string BorrowId { get; set; }
+        public int BorrowId { get; set; }
         public int AccountId { get; set; }
         public int BookId { get; set; }
         [DataType(DataType.Date)]

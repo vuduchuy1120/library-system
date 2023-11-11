@@ -48,7 +48,6 @@ namespace Library_System.Pages
             
         }
 
-        [HttpPost]
         public async Task<IActionResult> OnPostAddCart(int id)
         {
             Book book = _context.Books.Find(id);
@@ -87,6 +86,7 @@ namespace Library_System.Pages
                 .Include(p=>p.Publisher)
                 .Include(c=>c.Category)     
                 .Where(b=>b.Author.DeleteAt==null && b.Publisher.DeleteAt == null && b.Category.DeleteAt == null && b.DeleteAt == null )
+                .Where(b=>b.UnitInStock>0)
                 .ToList();
             if (categoryId != 0)
             {

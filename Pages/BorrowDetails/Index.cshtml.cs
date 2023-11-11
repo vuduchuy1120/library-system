@@ -30,5 +30,14 @@ namespace Library_System.Pages.BorrowDetails
                 .Include(b => b.Book).ToListAsync();
             }
         }
+
+        public IActionResult OnPostExtention(int id)
+        {
+            BorrowDetail borrowDetail = _context.BorrowDetails.Find(id);
+            // Add 7 days to return date
+            borrowDetail.ReturnDate = borrowDetail.ReturnDate.AddDays(7);
+            _context.SaveChanges();
+            return RedirectToPage("./Index");
+        }
     }
 }

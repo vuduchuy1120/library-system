@@ -60,14 +60,18 @@
             </div>
         </div>
         <div class="row mt-4 d-flex align-items-center">
-            <div class="col-sm-6 order-md-2 text-right">
-                <a href="catalog.html" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
-            </div>
+            
+            <form method="post" asp-page-handler="Checkout">
+                <div class="col-sm-6 order-md-2 text-right">
+                    <button class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</button>
+                </div>
+            </form>
             <div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
                 <a href="/Index">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Home
                 </a>
             </div>
+            
         </div>
     </div>
 </section>
