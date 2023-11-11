@@ -48,7 +48,7 @@ namespace Library_System.Pages.BorrowDetails
                 borrowDetail.Status = "Borrowed";
             }
             _context.SaveChanges();
-            _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("MM/d/yyyy"));
+            _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("M/d/yyyy"));
             return RedirectToPage("./Index");
         }
 

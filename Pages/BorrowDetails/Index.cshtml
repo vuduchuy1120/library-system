@@ -51,7 +51,7 @@
             <td >
                     @Html.DisplayFor(modelItem => item.BorrowDate)
             </td>
-                <td data-returnDate="@item.BorrowId">
+            <td data-returnDate="@item.BorrowId">
                 @Html.DisplayFor(modelItem => item.ReturnDate)
             </td>
             <td >
@@ -64,8 +64,8 @@
                 <input type="hidden" value="@item.Status" id="backupStatus">
                 <a asp-page="./Edit" asp-route-id="@item.BorrowId" >Edit</a> |
                 <form method="post" asp-page-handler="Extention">
-                <input type="hidden" value="@item.BookId" name="id" />
-                <button type="submit" class="btn-success">Extention</button>
+                    <input type="hidden" value="@item.BookId" name="id" />
+                    <button type="submit" class="btn-success">Extend</button>
                 </form>
             </td>
         </tr>
@@ -97,13 +97,50 @@
 
         }
     });
-
-    connection.on("LoadEdit", function (id, returnDate) {
-        const row = document.querySelector(`tr[data-edit="${id}"]`);
+    connection.on("LoadReturnDate", function (id, returnDate) {
+        const row = document.querySelector(`td[data-returnDate="${id}"]`);
         if (row) {
             row.innerHTML = returnDate;
         }
     });
+
+    connection.on("LoadEdit", function (id, account, book, borrowDate, returnDate, status) {
+        const row = document.querySelector(`tr[data-edit="${id}"]`);
+
+        if (row) {
+            const newRowHtml = `
+                <tr data-edit="${id}">
+                    <td>${id}</td>
+                    <td>${account}</td>
+                    <td>${book}</td>
+                    <td>${borrowDate}</td>
+                    <td>${returnDate}</td>
+                    <td>
+                        <form method="post" asp-page-handler="ChangeStatus">
+                            <input type="hidden" value="${id}" name="id" />
+                            <select data-status="${id}" name="status" onchange="changeStatus(this)">
+                                <option ${status === "Booked" ? "selected" : ""}>Booked</option>
+                                <option ${status === "Borrowed" ? "selected" : ""}>Borrowed</option>
+                                <option ${status === "OutOfDate" ? "selected" : ""}>OutOfDate</option>
+                                <option ${status === "Returned" ? "selected" : ""}>Returned</option>
+                                <option ${status === "Canceled" ? "selected" : ""}>Canceled</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                            <a href="/BorrowDetails/Edit?id=${id}">Edit</a> |
+                        <form method="post" asp-page-handler="Extension">
+                            <input type="hidden" value="${id}" name="id" />
+                            <button type="submit" class="btn-success">Extend</button>
+                        </form>
+                    </td>
+                </tr>
+            `;
+
+            row.innerHTML = newRowHtml;
+        }
+    });
+
    
 
 </script>
