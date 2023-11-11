@@ -33,7 +33,7 @@ namespace Library_System.Pages.BorrowDetails
                 .Include(b => b.Account)
                 .Include(b => b.Book).ToListAsync();
             }
-            List<string> status = new List<string>() {"Booked", "Borrowed", "OutOfDate", "Returned" };
+            List<string> status = new List<string>() {"Booked", "Borrowed", "OutOfDate", "Returned", "Canceled"};
             ViewData["Status"] = new SelectList(status);
 
         }
@@ -48,7 +48,7 @@ namespace Library_System.Pages.BorrowDetails
                 borrowDetail.Status = "Borrowed";
             }
             _context.SaveChanges();
-            
+            _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("MM/d/yyyy"));
             return RedirectToPage("./Index");
         }
 

@@ -87,19 +87,5 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-<script>
-    $(document).ready(function () {
-        // Gửi yêu cầu AJAX để lấy giá trị từ HttpContext.Session
-        $.ajax({
-            type: "GET",
-            url: "/YourController/GetCartTotal", // Thay thế YourController/GetCartTotal bằng đúng URL của bạn
-            success: function (total) {
-                $('#total').text(total);
-            },
-            error: function () {
-                // Xử lý lỗi nếu có
-            }
-        });
-    });
-</script>
+
 </html>
