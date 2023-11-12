@@ -1,0 +1,66 @@
+﻿@page
+@model Library_System.Pages.Books.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="text-center" style="margin-bottom:20px"></h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Nửa bên trái chứa ảnh -->
+        <div class="col-md-4">
+            <img src="@Model.Book.Image" class="img-fluid" alt="Book Image" style="height:444px" />
+        </div>
+
+        <!-- Nửa bên phải chứa văn bản -->
+        <div class="col-md-8">
+            <div class="container-fluid">
+                <h2 class="mt-4 text-center">Book Details</h2>
+                <dl class="row text-left">
+                    <dt class="col-sm-4  text-left">ISBN Code:</dt>
+                    <dd class="col-sm-8">@Model.Book.IsbCode</dd>
+
+                    <dt class="col-sm-4">Book Name:</dt>
+                    <dd class="col-sm-8">@Model.Book.BookName</dd>
+
+                    <dt class="col-sm-4">Unit Price:</dt>
+                    <dd class="col-sm-8">@Model.Book.UnitPrice</dd>
+
+                    <dt class="col-sm-4">Unit In Stock:</dt>
+                    <dd class="col-sm-8">@Model.Book.UnitInStock</dd>
+
+                    <dt class="col-sm-4">Year:</dt>
+                    <dd class="col-sm-8">@Model.Book.Year</dd>
+
+                    <dt class="col-sm-4">Description:</dt>
+                    <dd class="col-sm-8">@Model.Book.Description</dd>
+
+                    <dt class="col-sm-4">Author :</dt>
+                    <dd class="col-sm-8">@Model.Book.Author.AuthorName</dd>
+
+                    <dt class="col-sm-4">Category:</dt>
+                    <dd class="col-sm-8">@Model.Book.Category.CategoryName</dd>
+
+                    <dt class="col-sm-4">Publisher:</dt>
+                    <dd class="col-sm-8">@Model.Book.Publisher.PublisherName</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Admin thì hiện-->
+@if (User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
+{
+    <div class="text-center">
+        <a asp-page="./Edit" asp-route-id="@Model.Book?.Id">Edit</a> |
+        <a asp-page="./Index">Back to List</a>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <a asp-page="/Index">Back to List</a>
+    </div>
+}

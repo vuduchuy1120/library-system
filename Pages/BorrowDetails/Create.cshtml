@@ -1,0 +1,57 @@
+﻿@page
+@model Library_System.Pages.BorrowDetails.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>BorrowDetail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="BorrowDetail.BorrowId" class="control-label"></label>
+                <input asp-for="BorrowDetail.BorrowId" class="form-control" />
+                <span asp-validation-for="BorrowDetail.BorrowId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorrowDetail.AccountId" class="control-label"></label>
+                <select asp-for="BorrowDetail.AccountId" class ="form-control" asp-items="ViewBag.AccountId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorrowDetail.BookId" class="control-label"></label>
+                <select asp-for="BorrowDetail.BookId" class ="form-control" asp-items="ViewBag.BookId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorrowDetail.BorrowDate" class="control-label"></label>
+                <input asp-for="BorrowDetail.BorrowDate" class="form-control" />
+                <span asp-validation-for="BorrowDetail.BorrowDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorrowDetail.ReturnDate" class="control-label"></label>
+                <input asp-for="BorrowDetail.ReturnDate" class="form-control" />
+                <span asp-validation-for="BorrowDetail.ReturnDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorrowDetail.Status" class="control-label"></label>
+                <input asp-for="BorrowDetail.Status" class="form-control" />
+                <span asp-validation-for="BorrowDetail.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

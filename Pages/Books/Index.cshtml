@@ -1,0 +1,103 @@
+﻿@page
+@model Library_System.Pages.Books.IndexModel
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-page="Create">Create New</a>
+</p>
+
+<form method="post" class="text-center" style="margin-bottom:20px">
+    <span style="margin-right:40px">
+        <label for="categoryId" style="font-weight:bold">Category</label>
+        <select asp-for="categoryId" class=" w-25 col-form-label" asp-items="ViewBag.CategoryId"></select>
+    </span>
+    <select asp-for="option" class="w-15 col-form-label" style="font-weight:bold">
+        <option value="1">Book Name</option>
+        <option value="2">Author</option>
+        <option value="3">ISBN</option>
+    </select>
+    <span>
+        <input asp-for="search" class=" col-form-label" style="width:300px" />
+        <button class="btn btn-primary" type="submit" style="height:100%;width:90px">Search</button>
+    </span>
+</form>
+<table class ="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].IsbCode)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].BookName)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].UnitInStock)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].Year)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].Image)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].Description)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].Author)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].Category)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.books[0].Publisher)
+			</th>
+			<th class="text-center">
+				Action
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.books)
+		{
+			<tr>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.IsbCode)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.BookName)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.UnitInStock)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Year)
+				</td>
+				<td>
+					<img class="w-200" src="@item.Image" height="200" width="auto">
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Description)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Author.AuthorName)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Category.CategoryName)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Publisher.PublisherName)
+				</td>
+				<td width="180">
+					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
