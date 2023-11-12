@@ -47,14 +47,13 @@ else
 }
 <form method="post" asp-page-handler="Search">
 	<span style="margin-right:40px">
-		<label for="categoryId" style="font-weight:bold">Status</label>
+		<label  style="font-weight:bold">Status</label>
 		<select asp-for="status" class=" w-15 col-form-label" >
 			<option value="All">All</option>
 			<option value="Booked">Booked</option>
 			<option value="Pending">Pending</option>
             <option value="Borrowed">Borrowed</option>
-            <option value="OutOfDate">OutOfDate</option>
-            <option value="Returned">Returned</option>
+            <option value="OutOfDate">OutOfDate</option>       
             <option value="Canceled">Canceled</option>
 		</select>
 	</span>
@@ -238,3 +237,26 @@ else
 		}
 	}
 </script>
+@{
+	var prevDisabled = !Model.BorrowDetail.HasPreviousPage ? "disabled" : "";
+	var nextDisabled = !Model.BorrowDetail.HasNextPage ? "disabled" : "";
+}
+
+
+<div class="text-center m-5">
+	<a style="margin-right: 20px;" asp-page="./Index"
+
+	   asp-route-pageIndex="@(Model.BorrowDetail.PageIndex - 1)"
+	   class="btn btn-primary @prevDisabled">
+		Previous
+	</a>
+
+	<a asp-page="./Index"
+
+	   asp-route-pageIndex="@(Model.BorrowDetail.PageIndex + 1)"
+
+	   class="btn btn-primary @nextDisabled">
+		Next
+	</a>
+
+</div>

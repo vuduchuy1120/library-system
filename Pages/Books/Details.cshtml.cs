@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Library_System.Pages.Books
 {
-    [Authorize(Policy = "Admin")]
     public class DetailsModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;
@@ -30,7 +29,11 @@ namespace Library_System.Pages.Books
                 return NotFound();
             }
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _context.Books
+                .Include(b => b.Category)
+                .Include(b => b.Publisher)
+                .Include(b => b.Author)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {
                 return NotFound();

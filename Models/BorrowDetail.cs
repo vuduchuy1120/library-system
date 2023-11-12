@@ -11,7 +11,9 @@ namespace Library_System.Models
         [DataType(DataType.Date)]
         public DateTime BorrowDate { get; set; }
         [DataType(DataType.Date)]
-        public DateTime ReturnDate { get; set; }
+		// [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+		[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+		public DateTime ReturnDate { get; set; }
         public string Status { get; set; }
         [DataType(DataType.Date)]
         public DateTime? DeleteAt { get; set; }

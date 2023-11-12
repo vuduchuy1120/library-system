@@ -90,9 +90,9 @@ namespace Library_System.Pages.BorrowDetails
                 }
             }
 
-            _hubContext.Clients.All.SendAsync("LoadEdit"
+            await _hubContext.Clients.All.SendAsync("LoadEdit"
                 ,BorrowDetail.BorrowId
-                , _context.Accounts.Find(BorrowDetail.AccountId).UserName
+                ,  _context.Accounts.Find(BorrowDetail.AccountId).UserName
                 , _context.Books.Find(BorrowDetail.BookId).BookName
                 , BorrowDetail.BorrowDate.ToString("MM/d/yyyy")
                 , BorrowDetail.ReturnDate.ToString("MM/d/yyyy")

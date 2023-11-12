@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using System.Globalization;
 using System.Text;
+using Library_System.Utils;
+using System.Drawing.Printing;
 
 namespace Library_System.Pages.BorrowDetails
 {
@@ -22,13 +24,16 @@ namespace Library_System.Pages.BorrowDetails
     {
         private readonly Library_System.LibrarySystemContext _context;
         private readonly IHubContext<SignalrHub> _hubContext;
-        public IndexModel(Library_System.LibrarySystemContext context, IHubContext<SignalrHub> hubContext)
+		private readonly IConfiguration Configuration;
+
+		public IndexModel(Library_System.LibrarySystemContext context, IHubContext<SignalrHub> hubContext, IConfiguration configuration)
         {
             _context = context;
             _hubContext = hubContext;
+			Configuration = configuration;
         }
-        [BindProperty]
-        public IList<BorrowDetail> BorrowDetail { get; set; } = default!;
+        //[BindProperty]
+        //public IList<BorrowDetail> BorrowDetail { get; set; } = default!;
         [BindProperty]
         public string status { get; set; } = default!;
 		[BindProperty]
@@ -41,86 +46,106 @@ namespace Library_System.Pages.BorrowDetails
         public DateTime startDate { get; set; } = default!;
 		[BindProperty]
         public DateTime endDate { get; set; } = default!;
+		[BindProperty]
+		public PaginatedList<BorrowDetail> BorrowDetail { get; set; } = default!;
 
-		public async Task OnGetAsync()
+		public IQueryable<BorrowDetail> BorrowDetailsIQ { get; set; } = default!;
+		public async Task OnGetAsync(int? pageIndex)
         {
-			await getDataStart();
-			setStartOptionFilter();
-
+			pageIndex = pageIndex ?? 1;
+			await getDataStart(pageIndex);
+			GetOptionFilter();
+			await Filter();
+			await Pagging(pageIndex);
 		}
-        public async Task getDataStart()
+        public async Task getDataStart(int? pageIndex)
         {
 			var account = HttpContext.User;
 			// get username off account
 			var userName = account.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			BorrowDetailsIQ = from s in _context.BorrowDetails
+													   select s;
+
 			if (_context.BorrowDetails != null)
 			{
 				if (User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
 				{
-					BorrowDetail = await _context.BorrowDetails
-					.Include(b => b.Account)
-					.Include(b => b.Book)
-					.ToListAsync();
+					BorrowDetailsIQ = from s in _context.BorrowDetails
+									  select s;
+					BorrowDetailsIQ = BorrowDetailsIQ.Include(b => b.Book).Include(b => b.Account);
+
 				}
 				else
 				{
-					BorrowDetail = await _context.BorrowDetails
-					.Include(b => b.Account)
-					.Include(b => b.Book)
-					.Where(o => o.Account.UserName == userName)
-					.ToListAsync();
+					BorrowDetailsIQ = from s in _context.BorrowDetails
+									  where s.Account.UserName == userName
+									  select s;
+					BorrowDetailsIQ = BorrowDetailsIQ.Include(b => b.Book).Include(b => b.Account);
+
 				}
-
-
-				foreach (var item in BorrowDetail.Where(item => item.ReturnDate <= DateTime.Now && item.Status == "Borrowed"))
+				foreach (var item in BorrowDetailsIQ.Where(item => item.ReturnDate <= DateTime.Now && item.Status == "Borrowed"))
 				{
 					item.Status = "OutOfDate";
 					_context.BorrowDetails.Update(item);
 					await _context.SaveChangesAsync();
+					_hubContext.Clients.All.SendAsync("LoadStatus", item.BorrowId, item.Status);
+					_hubContext.Clients.All.SendAsync("LoadReturnDate", item.BorrowId, item.ReturnDate.ToString("MM/dd/yyyy"));
 
 				}
-
 			}
 			List<string> status = new List<string>() { "Booked", "Pending", "Borrowed", "OutOfDate", "Returned", "Canceled", };
 			ViewData["Status"] = new SelectList(status);
 		}
-        public void setStartOptionFilter()
+		public async Task Pagging(int? pageIndex)
+		{
+			var pageSize = Configuration.GetValue("PageSize", 3);
+			BorrowDetailsIQ = BorrowDetailsIQ.AsNoTracking();
+			BorrowDetail = await PaginatedList<BorrowDetail>.CreateAsync(
+				BorrowDetailsIQ.AsNoTracking(),
+				pageIndex ?? 1, pageSize);
+		}
+        public void GetOptionFilter()
         {
-            status = "All";
-            option = 1;
-            search = "";
-            optionDate = 1;
-            startDate = default!;
-            endDate = DateTime.Now;
+            status = status == null ?"All":status;
+            option = option == 0 ? 1 : option;
+            search = search == null ? "" : search;
+            optionDate = optionDate == 0 ? 1 : optionDate;
+			startDate = startDate == default ? default! : startDate;
+            endDate = endDate == default ? DateTime.Now : endDate;
 
         }
-        public async Task OnPostSearch()
-        {
-			await getDataStart();
+		public async Task OnPostSearch(int? pageIndex)
+		{
+			await OnGetAsync(pageIndex);
+		}
+
+		public async Task Filter()
+		{
 			search = RemoveDiacritics(search).ToLower().Trim();
-            
-            if(status != "All")
-            {
-				BorrowDetail = BorrowDetail.Where(o => o.Status == status).ToList();
-			}
-            if (option == 1)
-            {
-                BorrowDetail = BorrowDetail.Where(o => o.Account.UserName.ToLower().Contains(search)).ToList();
-            }
-            else if(option ==2)
-            {
-                BorrowDetail = BorrowDetail.Where(o => RemoveDiacritics(o.Book.BookName.ToLower().Trim()).Contains(search)).ToList();
-            }
-			if(optionDate == 1)
+
+			if (status != "All")
 			{
-				BorrowDetail = BorrowDetail.Where(o => o.BorrowDate.Date >= startDate.Date && o.BorrowDate.Date <= endDate.Date).ToList();
+				BorrowDetailsIQ = BorrowDetailsIQ.Where(o => o.Status == status);
 			}
-			else if(optionDate == 2)
+			if (option == 1)
 			{
-				BorrowDetail = BorrowDetail.Where(o => o.ReturnDate.Date >= startDate.Date && o.ReturnDate.Date <= endDate.Date).ToList();
+				BorrowDetailsIQ = BorrowDetailsIQ.Where(o => o.Account.UserName.ToLower().Contains(search));
 			}
-            
-			
+			else if (option == 2)
+			{
+				BorrowDetailsIQ = BorrowDetailsIQ.Include(b => b.Book)
+					.Include(b => b.Account)
+					.Where(o => RemoveDiacritics(o.Book.BookName).ToLower().Trim().Contains(search));
+			}
+			if (optionDate == 1)
+			{
+				BorrowDetailsIQ = BorrowDetailsIQ.Where(o => o.BorrowDate.Date >= startDate.Date && o.BorrowDate.Date <= endDate.Date);
+			}
+			else if (optionDate == 2)
+			{
+				BorrowDetailsIQ = BorrowDetailsIQ.Where(o => o.ReturnDate.Date >= startDate.Date && o.ReturnDate.Date <= endDate.Date);
+			}
+
 		}
 		public static string RemoveDiacritics(string text)
 		{
@@ -151,7 +176,7 @@ namespace Library_System.Pages.BorrowDetails
                     borrowDetail.Status = "Pending";
 					TempData["SuccessMessage"] = "The request extends successfully! Please wait a moment.";
 					_context.SaveChanges();
-				    _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("M/d/yyyy"));
+				    _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("MM/dd/yyyy"));
                 }
                 else
                 {
