@@ -2,47 +2,50 @@
 @model Library_System.Pages.Categories.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+	<a asp-page="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Category[0].CategoryName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category[0].Descriptions)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category[0].DeleteAt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Category) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descriptions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeleteAt)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Category[0].CategoryName)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Category[0].Descriptions)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Category[0].DeleteAt)
+			</th>
+			<th class="text-center">
+				Action
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Category)
+		{
+			<tr>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.CategoryName)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Descriptions)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.DeleteAt)
+				</td>
+				<td class="text-center">
+					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

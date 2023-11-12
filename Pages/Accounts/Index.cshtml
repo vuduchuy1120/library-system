@@ -2,77 +2,81 @@
 @model Library_System.Pages.Accounts.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+	<a asp-page="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].IsAdmin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Account[0].DeleteAt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Account) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAdmin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeleteAt)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].UserName)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].Password)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].Gender)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].Email)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].Phone)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Account[0].Address)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].IsAdmin)
+			</th>
+			<th class="text-center">
+				@Html.DisplayNameFor(model => model.Account[0].DeleteAt)
+			</th>
+			<th class="text-center">
+				Action
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Account)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.UserName)
+				</td>
+				<td class="text-center">
+					********
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Gender)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Email)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.Phone)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Address)
+				</td>
+
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.IsAdmin)
+				</td>
+				<td class="text-center">
+					@Html.DisplayFor(modelItem => item.DeleteAt)
+				</td>
+				<td class="text-center">
+					<a asp-page="./Edit" asp-route-id="@item.UserId">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@item.UserId">Details</a> |
+					<a asp-page="./Delete" asp-route-id="@item.UserId">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
