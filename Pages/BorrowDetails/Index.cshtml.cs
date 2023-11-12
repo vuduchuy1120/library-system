@@ -121,7 +121,7 @@ namespace Library_System.Pages.BorrowDetails
 
 		public async Task Filter()
 		{
-			search = RemoveDiacritics(search).ToLower().Trim();
+			search = search.ToLower();
 
 			if (status != "All")
 			{
@@ -133,9 +133,10 @@ namespace Library_System.Pages.BorrowDetails
 			}
 			else if (option == 2)
 			{
-				BorrowDetailsIQ = BorrowDetailsIQ.Include(b => b.Book)
-					.Include(b => b.Account)
-					.Where(o => RemoveDiacritics(o.Book.BookName).ToLower().Trim().Contains(search));
+				BorrowDetailsIQ = BorrowDetailsIQ
+					.Include(o => o.Book)
+					.Include(o => o.Account)
+					.Where(o => o.Book.BookName.ToLower().Trim().Contains(search));
 			}
 			if (optionDate == 1)
 			{
@@ -147,23 +148,8 @@ namespace Library_System.Pages.BorrowDetails
 			}
 
 		}
-		public static string RemoveDiacritics(string text)
-		{
-            text = text == null ? "" : text;
-			var normalizedString = text.Normalize(NormalizationForm.FormD);
-			var stringBuilder = new StringBuilder();
-
-			foreach (var c in normalizedString)
-			{
-				var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-				if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-				{
-					stringBuilder.Append(c);
-				}
-			}
-
-			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-		}
+		
+		
 
 		public IActionResult OnPostExtention(int? id)
         {
