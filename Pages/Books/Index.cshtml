@@ -11,7 +11,7 @@
 	<a asp-page="Create">Create New</a>
 </p>
 
-<form method="post">
+<form method="post" class="text-center" style="margin-bottom:20px">
     <span style="margin-right:40px">
         <label for="categoryId" style="font-weight:bold">Category</label>
         <select asp-for="categoryId" class=" w-25 col-form-label" asp-items="ViewBag.CategoryId"></select>
@@ -26,7 +26,7 @@
         <button class="btn btn-primary" type="submit" style="height:100%;width:90px">Search</button>
     </span>
 </form>
-<table class="table">
+<table class ="table table-bordered table-striped">
 	<thead>
 		<tr>
 			<th class="text-center">
