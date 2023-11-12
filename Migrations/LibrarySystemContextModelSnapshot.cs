@@ -163,8 +163,6 @@ namespace Library_System.Migrations
                     b.Property<int>("BorrowId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-                    ;
-
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 

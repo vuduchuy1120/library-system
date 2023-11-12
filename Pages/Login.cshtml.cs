@@ -46,6 +46,11 @@ namespace Library_System.Pages
 				}
 				else
 				{
+					if(customer.DeleteAt != null)
+					{
+                        ModelState.AddModelError("Error", "The account has been locked, please contact the administrator to unlock it.");
+                        return Page();
+                    }
 					var claims = new List<Claim>()
 					{
 						new Claim(ClaimTypes.NameIdentifier, customer.UserName),

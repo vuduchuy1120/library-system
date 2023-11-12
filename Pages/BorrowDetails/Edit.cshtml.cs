@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library_System;
 using Library_System.Models;
+using Microsoft.AspNetCore.Authorization;
 using Library_System.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Library_System.Pages.BorrowDetails
 {
+    [Authorize(Policy = "Admin")]
     public class EditModel : PageModel
     {
         private readonly Library_System.LibrarySystemContext _context;

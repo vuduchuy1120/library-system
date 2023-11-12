@@ -40,11 +40,6 @@
                 <span asp-validation-for="Book.PublisherId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Book.QuantityPerUnit" class="control-label"></label>
-                <input asp-for="Book.QuantityPerUnit" class="form-control" />
-                <span asp-validation-for="Book.QuantityPerUnit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Book.UnitPrice" class="control-label"></label>
                 <input asp-for="Book.UnitPrice" class="form-control" />
                 <span asp-validation-for="Book.UnitPrice" class="text-danger"></span>
@@ -69,21 +64,14 @@
                 <input asp-for="Book.Description" class="form-control" />
                 <span asp-validation-for="Book.Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Book.Language" class="control-label"></label>
-                <input asp-for="Book.Language" class="form-control" />
-                <span asp-validation-for="Book.Language" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Book.PrintLength" class="control-label"></label>
-                <input asp-for="Book.PrintLength" class="form-control" />
-                <span asp-validation-for="Book.PrintLength" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Book.DeleteAt" class="control-label"></label>
-                <input asp-for="Book.DeleteAt" class="form-control" />
-                <span asp-validation-for="Book.DeleteAt" class="text-danger"></span>
-            </div>
+            @if(Model.Book.DeleteAt != null){
+                <div class="form-group">
+                    <label asp-for="Book.DeleteAt" class="control-label"></label>
+                    <input asp-for="Book.DeleteAt" class="form-control" />
+                    <span asp-validation-for="Book.DeleteAt" class="text-danger"></span>
+                </div>
+
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

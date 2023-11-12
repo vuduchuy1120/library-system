@@ -25,8 +25,9 @@ namespace Library_System.Pages.Accounts
         {
             if (_context.Accounts != null)
             {
-                Account = await _context.Accounts.OrderBy(a=> a.DeleteAt)
-                    .ToListAsync();
+                // sort by deleteAt
+
+                Account = await _context.Accounts.OrderBy(a => a.DeleteAt).ToListAsync();
             }
         }
     }
