@@ -45,7 +45,41 @@ else
 	<a asp-page="Create">Create New</a>
 </p>
 }
+<form method="post" asp-page-handler="Search">
+	<span style="margin-right:40px">
+		<label  style="font-weight:bold">Status</label>
+		<select asp-for="status" class=" w-15 col-form-label" >
+			<option value="All">All</option>
+			<option value="Booked">Booked</option>
+			<option value="Pending">Pending</option>
+            <option value="Borrowed">Borrowed</option>
+            <option value="OutOfDate">OutOfDate</option>       
+            <option value="Canceled">Canceled</option>
+		</select>
+	</span>
+	<select asp-for="option" class="w-15 col-form-label" style="font-weight:bold">
+		<option value="1">Account</option>
+		<option value="2">Book</option>
+	</select>
+	<span style="margin-right:40px">
+		<input asp-for="search" class=" col-form-label" style="width:250px" />
+	</span>
 
+	</span>
+	<select asp-for="optionDate" class="w-15 col-form-label" style="font-weight:bold;margin-right:20px">
+		<option value="1">BorrowDate</option>
+		<option value="2">ReturnDate</option>
+	</select>
+	<span>
+		<label  style="font-weight:bold">StartDate</label>
+		<input asp-for="startDate" type="date" class=" col-form-label" style="width:120px;margin-right:20px" />
+
+		<label style="font-weight:bold">EndDate</label>
+		<input asp-for="endDate" type="date" class=" col-form-label" style="width:120px" />
+		<button class="btn btn-primary" type="submit" style="height:100%;width:90px">Search</button>
+	</span>
+
+</form>
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
