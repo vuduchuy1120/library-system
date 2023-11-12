@@ -46,37 +46,38 @@ else
 </p>
 }
 
-<table class="table">
+<table class="table table-bordered table-striped">
 	<thead>
 		<tr>
 
-			<th>
+			<th class="text-center">
 				@Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowId)
 			</th>
-			<th>
+			<th class="text-center">
 				@Html.DisplayNameFor(model => model.BorrowDetail[0].Account)
 			</th>
-			<th>
+			<th class="text-center">
 				@Html.DisplayNameFor(model => model.BorrowDetail[0].Book)
 			</th>
-			<th>
+			<th class="text-center">
 				@Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowDate)
 			</th>
-			<th>
+			<th class="text-center">
 				@Html.DisplayNameFor(model => model.BorrowDetail[0].ReturnDate)
 			</th>
-			<th>
+			<th class="text-center">
 				@Html.DisplayNameFor(model => model.BorrowDetail[0].Status)
 			</th>
-
-			<th></th>
+			<th class="text-center">
+				Action
+			</th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach (var item in Model.BorrowDetail)
 		{
 			<tr data-edit="@item.BorrowId">
-				<td>
+				<td class="text-center">
 					@Html.DisplayFor(modelItem => item.BorrowId)
 				</td>
 				<td>
@@ -85,36 +86,32 @@ else
 				<td>
 					@Html.DisplayFor(modelItem => item.Book.BookName)
 				</td>
-				<td>
+				<td class="text-center">
 					@Html.DisplayFor(modelItem => item.BorrowDate)
 				</td>
-				<td data-returnDate="@item.BorrowId">
+				<td class="text-center" data-returnDate="@item.BorrowId">
 					@Html.DisplayFor(modelItem => item.ReturnDate)
 				</td>
 
 				@if (User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
 				{
-					<td>
+					<td class="text-center">
 						<form method="post" asp-page-handler="ChageStatus">
 							<input type="hidden" asp-for="@item.BorrowId" name="id" />
-							<select data-status="@item.BorrowId" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status"></select>
+							<select data-status="@item.BorrowId" class="text-center" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status"></select>
 						</form>
 					</td>
-					<td>
+					<td class="text-center">
 						<input type="hidden" value="@item.Status" id="backupStatus">
-						<a asp-page="./Edit" asp-route-id="@item.BorrowId">Edit</a> |
-						<form method="post" asp-page-handler="Extention">
-							<input type="hidden" asp-for="@item.BorrowId" name="id" />
-							<button type="submit" class="btn-success">Extend</button>
-						</form>
+						<a asp-page="./Edit"  asp-route-id="@item.BorrowId">Edit</a>
 					</td>
 				}
 				else
 				{
-					<td>
+					<td class="text-center">
 						@Html.DisplayFor(modelItem => item.Status)
 					</td>
-					<td>
+					<td class="text-center">
 						<form method="post" asp-page-handler="Extention">
 							<input type="hidden" value="@item.BorrowId" name="id" />
 							<button type="submit" class="btn-success">Extend</button>
