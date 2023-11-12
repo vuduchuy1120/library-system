@@ -21,12 +21,12 @@ namespace Library_System.Pages
         }
 
         [BindProperty]
-        public int categoryId { get; set; } 
+        public int CategoryId { get; set; } 
 
         [BindProperty]
-        public int option { get; set; } 
+        public int Option { get; set; } 
         [BindProperty]
-        public string search { get; set; }
+        public string Search { get; set; }
         [BindProperty]
         public bool showAlert { get; set; }
         [BindProperty]
@@ -35,9 +35,9 @@ namespace Library_System.Pages
         public List<Book> books = new List<Book>();
         public async Task OnGet()
         {
-            categoryId = 0;
-            option = 1;
-            search = "";
+            CategoryId = 0;
+            Option = 1;
+            Search = "";
             OnPost();
 
         }
@@ -96,20 +96,20 @@ namespace Library_System.Pages
                 .Where(b=>b.Author.DeleteAt==null && b.Publisher.DeleteAt == null && b.Category.DeleteAt == null && b.DeleteAt == null )
                 .Where(b=>b.UnitInStock>0)
                 .ToList();
-            if (categoryId != 0)
+            if (CategoryId != 0)
             {
-                books = books.Where(x => x.CategoryId == categoryId).ToList();
+                books = books.Where(x => x.CategoryId == CategoryId).ToList();
             }
-            if (option == 1 || option == 2)
+            if (Option == 1 || Option == 2)
             {
-                if (!String.IsNullOrEmpty(search))
+                if (!String.IsNullOrEmpty(Search))
                 {
-                    var normalizedSearch = RemoveDiacritics(search.ToLower()); 
-                    if (option == 1)
+                    var normalizedSearch = RemoveDiacritics(Search.ToLower()); 
+                    if (Option == 1)
                     {
                         books = books.Where(x => RemoveDiacritics(x.BookName.ToLower()).Contains(normalizedSearch)).ToList();
                     }
-                    else if (option == 2)
+                    else if (Option == 2)
                     {
                         books = books.Where(x => RemoveDiacritics(x.Author.AuthorName.ToLower()).Contains(normalizedSearch)).ToList();
                     }
