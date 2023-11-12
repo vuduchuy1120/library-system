@@ -1,6 +1,7 @@
 using Library_System.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace Library_System.Pages
@@ -42,6 +43,10 @@ namespace Library_System.Pages
 
         public IActionResult OnPostCheckout()
         {
+            var account = HttpContext.User;
+            var userName = account.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Account acc = _context.Accounts.Where(a => a.UserName == userName).SingleOrDefault();
+
             books = JsonSerializer.Deserialize<List<Book>>(HttpContext.Session.GetString("books"));
             foreach (var book in books)
             {
@@ -49,7 +54,7 @@ namespace Library_System.Pages
                 BorrowDetail borrowDetail = new BorrowDetail()
                 {
                     //AccountId = int.Parse(HttpContext.Session.GetString("id")),
-                    AccountId = 1,
+                    AccountId = acc.UserId,
                     BookId = book.Id,
                     BorrowDate = DateTime.Now,
                     ReturnDate = DateTime.Now.AddDays(7),

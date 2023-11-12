@@ -1,118 +1,208 @@
 ﻿@page
+@using System.Security.Claims;
 @model Library_System.Pages.BorrowDetails.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
+	var errorMessage = TempData["ErrorMessage"] as string;
+	var successMessage = TempData["SuccessMessage"] as string;
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<script>
+		var alertDiv = document.createElement("div");
+		alertDiv.className = "alert alert-danger"; 
+
+		var errorMessageSpan = document.createElement("span");
+		errorMessageSpan.innerHTML = '@errorMessage';
+		alertDiv.appendChild(errorMessageSpan);
+		document.body.appendChild(alertDiv);
+		errorMessage = "";
+	</script>
+}
+else
+{
+	@if (!string.IsNullOrEmpty(successMessage))
+	{
+		<script>
+			var alertDiv = document.createElement("div");
+			alertDiv.className = "alert alert-success";
+
+			var errorMessageSpan = document.createElement("span");
+			errorMessageSpan.innerHTML = '@successMessage';
+			alertDiv.appendChild(errorMessageSpan);
+			document.body.appendChild(alertDiv);
+		</script>
+	}
+	
 }
 
 <h1>Index</h1>
 
+@if(User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
+{
 <p>
-    <a asp-page="Create">Create New</a>
+	<a asp-page="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].Account)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].Book)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].ReturnDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowDetail[0].Status)
-            </th>
-            
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.BorrowDetail) {
-        <tr data-edit="@item.BorrowId">
-            <td>
-                @Html.DisplayFor(modelItem => item.BorrowId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Book.BookName)
-            </td>
-            <td >
-                    @Html.DisplayFor(modelItem => item.BorrowDate)
-            </td>
-                <td data-returnDate="@item.BorrowId">
-                @Html.DisplayFor(modelItem => item.ReturnDate)
-            </td>
-            <td >
-                <form method="post" asp-page-handler="ChageStatus">
-                    <input type="hidden" value="@item.BorrowId" name="id" />
-                    <select data-status="@item.BorrowId" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status"></select>
-                </form>
-            </td>
-            <td>
-                <input type="hidden" value="@item.Status" id="backupStatus">
-                <a asp-page="./Edit" asp-route-id="@item.BorrowId" >Edit</a> |
-                <form method="post" asp-page-handler="Extention">
-                <input type="hidden" value="@item.BookId" name="id" />
-                <button type="submit" class="btn-success">Extention</button>
-                </form>
-            </td>
-        </tr>
 }
-    </tbody>
+
+<table class="table">
+	<thead>
+		<tr>
+
+			<th>
+				@Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.BorrowDetail[0].Account)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.BorrowDetail[0].Book)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.BorrowDetail[0].BorrowDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.BorrowDetail[0].ReturnDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.BorrowDetail[0].Status)
+			</th>
+
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.BorrowDetail)
+		{
+			<tr data-edit="@item.BorrowId">
+				<td>
+					@Html.DisplayFor(modelItem => item.BorrowId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Account.UserName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Book.BookName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.BorrowDate)
+				</td>
+				<td data-returnDate="@item.BorrowId">
+					@Html.DisplayFor(modelItem => item.ReturnDate)
+				</td>
+
+				@if (User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
+				{
+					<td>
+						<form method="post" asp-page-handler="ChageStatus">
+							<input type="hidden" asp-for="@item.BorrowId" name="id" />
+							<select data-status="@item.BorrowId" name="status" onchange="changeStatus(this)" asp-for="@item.Status" asp-items="ViewBag.Status"></select>
+						</form>
+					</td>
+					<td>
+						<input type="hidden" value="@item.Status" id="backupStatus">
+						<a asp-page="./Edit" asp-route-id="@item.BorrowId">Edit</a> |
+						<form method="post" asp-page-handler="Extention">
+							<input type="hidden" asp-for="@item.BorrowId" name="id" />
+							<button type="submit" class="btn-success">Extend</button>
+						</form>
+					</td>
+				}
+				else
+				{
+					<td>
+						@Html.DisplayFor(modelItem => item.Status)
+					</td>
+					<td>
+						<form method="post" asp-page-handler="Extention">
+							<input type="hidden" value="@item.BorrowId" name="id" />
+							<button type="submit" class="btn-success">Extend</button>
+						</form>
+					</td>
+				}
+			</tr>
+		}
+	</tbody>
 </table>
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script>
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/signalrHub").build();
+	var connection = new signalR.HubConnectionBuilder().withUrl("/signalrHub").build();
 
-    connection.start().then(function () {
-        console.log('SignalR Started...')
-    }).catch(function (err) {
-        return console.error(err.toString());
-    });
+	connection.start().then(function () {
+		console.log('SignalR Started...')
+	}).catch(function (err) {
+		return console.error(err.toString());
+	});
 
-    connection.on("LoadStatus", function (id, status) {
-        const row = document.querySelector(`select[data-status="${id}"]`);
-        if (row) {
-            for (let option of row.options) {
-                if (option.value == status) {
-                    option.selected = true;
-                }
-                else {
-                    option.selected = false;
-                }
-            }
+	connection.on("LoadStatus", function (id, status) {
+		const row = document.querySelector(`select[data-status="${id}"]`);
+		if (row) {
+			for (let option of row.options) {
+				if (option.value == status) {
+					option.selected = true;
+				}
+				else {
+					option.selected = false;
+				}
+			}
 
-        }
-    });
+		}
+	});
+	connection.on("LoadReturnDate", function (id, returnDate) {
+		const row = document.querySelector(`td[data-returnDate="${id}"]`);
+		if (row) {
+			row.innerHTML = returnDate;
+		}
+	});
 
-    connection.on("LoadEdit", function (id, returnDate) {
-        const row = document.querySelector(`tr[data-edit="${id}"]`);
-        if (row) {
-            row.innerHTML = returnDate;
-        }
-    });
-   
+	connection.on("LoadEdit", function (id, account, book, borrowDate, returnDate, status) {
+		const row = document.querySelector(`tr[data-edit="${id}"]`);
+
+		if (row) {
+			const newRowHtml = `
+					<tr data-edit="${id}">
+						<td>${id}</td>
+						<td>${account}</td>
+						<td>${book}</td>
+						<td>${borrowDate}</td>
+						<td>${returnDate}</td>
+						<td>
+							<form method="post" asp-page-handler="ChangeStatus">
+								<input type="hidden" value="${id}" name="id" />
+								<select data-status="${id}" name="status" onchange="changeStatus(this)">
+									<option ${status === "Booked" ? "selected" : ""}>Booked</option>
+									<option ${status === "Borrowed" ? "selected" : ""}>Borrowed</option>
+									<option ${status === "OutOfDate" ? "selected" : ""}>OutOfDate</option>
+									<option ${status === "Returned" ? "selected" : ""}>Returned</option>
+									<option ${status === "Canceled" ? "selected" : ""}>Canceled</option>
+								</select>
+							</form>
+						</td>
+						<td>
+								<a href="/BorrowDetails/Edit?id=${id}">Edit</a> |
+							<form method="post" asp-page-handler="Extension">
+								<input type="hidden" value="${id}" name="id" />
+								<button type="submit" class="btn-success">Extend</button>
+							</form>
+						</td>
+					</tr>
+				`;
+
+			row.innerHTML = newRowHtml;
+		}
+	});
+
+
 
 </script>
 <script>
-    function changeStatus(element) {
-        if (confirm("Are you sure change this status?")) {
-            element.parentElement.submit();
-        } else {
-            element.value = document.getElementById("backupStatus").value;
-        }
-    }
+	function changeStatus(element) {
+		if (confirm("Are you sure change this status?")) {
+			element.parentElement.submit();
+		} else {
+			element.value = document.getElementById("backupStatus").value;
+		}
+	}
 </script>
