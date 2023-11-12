@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR;
 using Library_System.Hubs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
+using Library_System.Utils;
 
 namespace Library_System.Pages.BorrowDetails
 {
@@ -20,51 +21,64 @@ namespace Library_System.Pages.BorrowDetails
     {
         private readonly Library_System.LibrarySystemContext _context;
         private readonly IHubContext<SignalrHub> _hubContext;
-        public IndexModel(Library_System.LibrarySystemContext context, IHubContext<SignalrHub> hubContext)
+		private readonly IConfiguration Configuration;
+
+		public IndexModel(Library_System.LibrarySystemContext context, IHubContext<SignalrHub> hubContext, IConfiguration configuration)
         {
             _context = context;
             _hubContext = hubContext;
-        }
-        [BindProperty]
-        public IList<BorrowDetail> BorrowDetail { get; set; } = default!;
+			Configuration = configuration;
+		}
 
-        public async Task OnGetAsync()
+		[BindProperty]
+        public PaginatedList<BorrowDetail> BorrowDetail { get; set; } = default!;
+
+        public async Task OnGetAsync(int? pageIndex)
         {
-            var account = HttpContext.User;
+			pageIndex = pageIndex ?? 1; 
+			var account = HttpContext.User;
             // get username off account
             var userName = account.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (_context.BorrowDetails != null)
+            IQueryable<BorrowDetail> BorrowDetailsIQ = from s in _context.BorrowDetails													   
+													   select s;
+
+			if (_context.BorrowDetails != null)
             {
                 if(User.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value == "True")
                 {
-                    BorrowDetail = await _context.BorrowDetails
-                    .Include(b => b.Account)
-                    .Include(b => b.Book)
-                    .ToListAsync();
-                }
+					BorrowDetailsIQ = from s in _context.BorrowDetails						 
+									  select s;
+					BorrowDetailsIQ = BorrowDetailsIQ.Include(b => b.Book).Include(b => b.Account);
+
+				}
                 else
                 {
-                    BorrowDetail = await _context.BorrowDetails
-                    .Include(b => b.Account)
-                    .Include(b => b.Book)
-                    .Where(o => o.Account.UserName == userName)
-                    .ToListAsync();
-                }
+					BorrowDetailsIQ = from s in _context.BorrowDetails                                      
+                                      where s.Account.UserName == userName
+                                      select s;
+					BorrowDetailsIQ = BorrowDetailsIQ.Include(b => b.Book).Include(b => b.Account);
 
+				}
+				foreach (var item in BorrowDetailsIQ.Where(item => item.ReturnDate <= DateTime.Now && item.Status == "Borrowed"))
+				{
+					item.Status = "OutOfDate";
+					_context.BorrowDetails.Update(item);
+					await _context.SaveChangesAsync();
+					_hubContext.Clients.All.SendAsync("LoadStatus", item.BorrowId, item.Status);
+					_hubContext.Clients.All.SendAsync("LoadReturnDate", item.BorrowId, item.ReturnDate.ToString("MM/dd/yyyy"));
 
-                foreach (var item in BorrowDetail.Where(item => item.ReturnDate <= DateTime.Now && item.Status == "Borrowed"))
-                {
-                    item.Status = "OutOfDate";
-                    _context.BorrowDetails.Update(item);
-                    await _context.SaveChangesAsync();
-                    
-                }
-
-            }
-            List<string> status = new List<string>() {"Booked", "Pending", "Borrowed", "OutOfDate", "Returned", "Canceled", };
+				}
+			}
+			List<string> status = new List<string>() {"Booked", "Pending", "Borrowed", "OutOfDate", "Returned", "Canceled", };
             ViewData["Status"] = new SelectList(status);
+			var pageSize = Configuration.GetValue("PageSize", 10);
+			BorrowDetailsIQ = BorrowDetailsIQ.AsNoTracking(); 
 
-        }
+			BorrowDetail = await PaginatedList<BorrowDetail>.CreateAsync(
+				BorrowDetailsIQ.AsNoTracking(),
+				pageIndex ?? 1, pageSize);
+		}
+
 
         public IActionResult OnPostExtention(int? id)
         {
@@ -77,7 +91,7 @@ namespace Library_System.Pages.BorrowDetails
                     borrowDetail.Status = "Pending";
 					TempData["SuccessMessage"] = "The request extends successfully! Please wait a moment.";
 					_context.SaveChanges();
-				    _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("M/d/yyyy"));
+				    _hubContext.Clients.All.SendAsync("LoadReturnDate", borrowDetail.BorrowId, borrowDetail.ReturnDate.ToString("MM/dd/yyyy"));
                 }
                 else
                 {

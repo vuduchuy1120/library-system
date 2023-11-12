@@ -203,3 +203,26 @@ else
 		}
 	}
 </script>
+@{
+	var prevDisabled = !Model.BorrowDetail.HasPreviousPage ? "disabled" : "";
+	var nextDisabled = !Model.BorrowDetail.HasNextPage ? "disabled" : "";
+}
+
+
+<div class="text-center m-5">
+	<a style="margin-right: 20px;" asp-page="./Index"
+
+	   asp-route-pageIndex="@(Model.BorrowDetail.PageIndex - 1)"
+	   class="btn btn-primary @prevDisabled">
+		Previous
+	</a>
+
+	<a asp-page="./Index"
+
+	   asp-route-pageIndex="@(Model.BorrowDetail.PageIndex + 1)"
+
+	   class="btn btn-primary @nextDisabled">
+		Next
+	</a>
+
+</div>
